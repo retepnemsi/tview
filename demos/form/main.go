@@ -2,6 +2,8 @@
 package main
 
 import (
+	"time"
+
 	"github.com/rivo/tview"
 )
 
@@ -15,6 +17,7 @@ func main() {
 		AddTextView("Notes", "This is just a demo.\nYou can enter whatever you wish.", 40, 2, true, false).
 		AddCheckbox("Age 18+", false, nil).
 		AddPasswordField("Password", "", 10, '*', nil).
+		AddDateField("Date", time.Now(), nil).
 		AddButton("Save", nil).
 		AddButton("Quit", func() {
 			app.Stop()

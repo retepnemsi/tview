@@ -2,6 +2,7 @@ package tview
 
 import (
 	"image"
+	"time"
 
 	"github.com/gdamore/tcell/v2"
 )
@@ -292,6 +293,16 @@ func (f *Form) AddInputField(label, value string, fieldWidth int, accept func(te
 		SetChangedFunc(changed)
 	inputField.SetFinishedFunc(f.finished)
 	f.items = append(f.items, inputField)
+	return f
+}
+
+func (f *Form) AddDateField(label string, value time.Time, changed func(text string)) *Form {
+	dateField := NewDateField().
+		SetLabel(label).
+		SetDate(value).
+		SetChangedFunc(changed).
+		SetFinishedFunc(f.finished)
+	f.items = append(f.items, dateField)
 	return f
 }
 
