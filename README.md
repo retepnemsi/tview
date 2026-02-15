@@ -27,7 +27,7 @@ They come with lots of customization options and can be easily extended to fit y
 To add this package to your project:
 
 ```bash
-go get github.com/rivo/tview@master
+go get github.com/retepnemsi/tview@master
 ```
 
 ## Hello World
