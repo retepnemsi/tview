@@ -4,7 +4,7 @@ package main
 import (
 	"time"
 
-	"github.com/rivo/tview"
+	"github.com/retepnemsi/tview"
 )
 
 func main() {
@@ -13,11 +13,11 @@ func main() {
 		AddDropDown("Title", []string{"Mr.", "Ms.", "Mrs.", "Dr.", "Prof."}, 0, nil).
 		AddInputField("First name", "", 20, nil, nil).
 		AddInputField("Last name", "", 20, nil, nil).
+		AddDateField("Date", time.Now(), nil).
 		AddTextArea("Address", "", 40, 0, 0, nil).
 		AddTextView("Notes", "This is just a demo.\nYou can enter whatever you wish.", 40, 2, true, false).
 		AddCheckbox("Age 18+", false, nil).
 		AddPasswordField("Password", "", 10, '*', nil).
-		AddDateField("Date", time.Now(), nil).
 		AddButton("Save", nil).
 		AddButton("Quit", func() {
 			app.Stop()

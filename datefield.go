@@ -259,55 +259,6 @@ func (df *DateField) InputHandler() func(event *tcell.EventKey, setFocus func(p 
 	return df.WrapInputHandler(func(key *tcell.EventKey, f func(p Primitive)) {
 		df.inputHandler(key, f)
 	})
-	//return df.WrapInputHandler(func(event *tcell.EventKey, setFocus func(p Primitive)) {
-	//	if df.textArea.GetDisabled() {
-	//		return
-	//	}
-	//
-	//	// If we have an autocomplete list, there are certain keys we will
-	//	// forward to it.
-	//
-	//	// Finish up.
-	//	finish := func(key tcell.Key) {
-	//		if df.done != nil {
-	//			df.done(key)
-	//		}
-	//		if df.finished != nil {
-	//			df.finished(key)
-	//		}
-	//	}
-	//
-	//	// Process special key events for the input field.
-	//	switch key := event.Key(); key {
-	//	case tcell.KeyEnter, tcell.KeyEscape, tcell.KeyTab, tcell.KeyBacktab:
-	//		finish(key)
-	//	case tcell.KeyCtrlV:
-	//		if df.accept != nil && !df.accept(df.textArea.getTextBeforeCursor()+df.textArea.GetClipboardText()+df.textArea.getTextAfterCursor(), 0) {
-	//			return
-	//		}
-	//		df.textArea.InputHandler()(event, setFocus)
-	//	case tcell.KeyRune:
-	//		if event.Modifiers()&tcell.ModAlt == 0 && df.accept != nil {
-	//			// Check if this rune is accepted.
-	//			r := event.Rune()
-	//			if !unicode.IsDigit(r) && r != '-' {
-	//				return
-	//			}
-	//			text := df.textArea.getTextBeforeCursor()
-	//			if len(text) == 5 || len(text) == 8 {
-	//				text += "-" + df.textArea.getTextAfterCursor()
-	//				df.textArea.SetText(text, false)
-	//			}
-	//			if !df.accept(df.textArea.getTextBeforeCursor()+string(r)+df.textArea.getTextAfterCursor(), r) {
-	//				return
-	//			}
-	//		}
-	//		fallthrough
-	//	default:
-	//		// Forward other key events to the text area.
-	//		df.textArea.InputHandler()(event, setFocus)
-	//	}
-	//})
 }
 
 func (df *DateField) inputHandler(event *tcell.EventKey, setFocus func(p Primitive)) {

@@ -300,8 +300,8 @@ func (f *Form) AddDateField(label string, value time.Time, changed func(text str
 	dateField := NewDateField().
 		SetLabel(label).
 		SetDate(value).
-		SetChangedFunc(changed).
-		SetFinishedFunc(f.finished)
+		SetChangedFunc(changed)
+	dateField.SetFinishedFunc(f.finished)
 	f.items = append(f.items, dateField)
 	return f
 }
