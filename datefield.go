@@ -54,16 +54,6 @@ func NewDateField() *DateField {
 		if datefield.changed != nil {
 			datefield.changed(datefield.textArea.GetText())
 		}
-	}).SetFocusFunc(func() {
-		// Forward focus event to the input field.
-		if datefield.Box.focus != nil {
-			datefield.Box.focus()
-		}
-	})
-	datefield.textArea.SetChangedFunc(func() {
-		if datefield.changed != nil {
-			datefield.changed(datefield.textArea.GetText())
-		}
 	})
 	datefield.textArea.textStyle = tcell.StyleDefault.Background(Styles.ContrastBackgroundColor).Foreground(Styles.PrimaryTextColor)
 	datefield.textArea.placeholderStyle = tcell.StyleDefault.Background(Styles.ContrastBackgroundColor).Foreground(Styles.ContrastSecondaryTextColor)
