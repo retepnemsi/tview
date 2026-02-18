@@ -288,13 +288,25 @@ func (df *DateField) inputHandler(event *tcell.EventKey, setFocus func(p Primiti
 			if !unicode.IsDigit(r) && r != '-' {
 				return
 			}
-			text := df.textArea.getTextBeforeCursor()
-			if len(text) == 4 || len(text) == 7 {
-				text += "-" + df.textArea.getTextAfterCursor()
+
+			_, fromCol, _, toCol := df.textArea.GetCursor()
+			if toCol == df.textArea.GetTextLength() {
+				text := df.textArea.getTextBeforeCursor()
+				if len(text) == 4 || len(text) == 7 {
+					text += "-" + df.textArea.getTextAfterCursor()
+					df.textArea.SetText(text, true)
+				}
+				if !df.accept(df.textArea.getTextBeforeCursor()+string(r)+df.textArea.getTextAfterCursor(), r) {
+					return
+				}
+			} else {
+				text := df.textArea.GetText()
+				text = text[:fromCol] + string(r) + text[fromCol+1:]
+				if !validateDate(text) {
+					return
+				}
 				df.textArea.SetText(text, true)
-			}
-			if !df.accept(df.textArea.getTextBeforeCursor()+string(r)+df.textArea.getTextAfterCursor(), r) {
-				return
+				event = nil
 			}
 		}
 		fallthrough
@@ -377,4 +389,12 @@ func inputFieldDateAcceptor(text string, ch rune) bool {
 		}
 	}
 	return true
+}
+
+func validateDate(text string) bool {
+	if len(text) != 10 {
+		return false
+	}
+	_, err := time.Parse("2006-01-02", text)
+	return err == nil
 }
