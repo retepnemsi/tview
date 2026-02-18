@@ -4,13 +4,28 @@ package main
 import (
 	"time"
 
+	"github.com/gdamore/tcell/v2"
 	"github.com/retepnemsi/tview"
 )
 
 func main() {
+	tview.Styles = tview.Theme{
+		PrimitiveBackgroundColor:    tcell.ColorBlack,     // Screen
+		ContrastBackgroundColor:     tcell.ColorAliceBlue, // Field background
+		MoreContrastBackgroundColor: tcell.ColorAliceBlue, // Dropdown background
+		BorderColor:                 tcell.ColorWhite,     // Border
+		TitleColor:                  tcell.ColorYellow,    // Title in border
+		GraphicsColor:               tcell.ColorWhite,
+		PrimaryTextColor:            tcell.ColorBlack, // Text
+		SecondaryTextColor:          tcell.ColorRed,   // Label
+		TertiaryTextColor:           tcell.ColorYellow,
+		InverseTextColor:            tcell.ColorWhite,
+		ContrastSecondaryTextColor:  tcell.ColorNavy,
+	}
 	app := tview.NewApplication()
 	form := tview.NewForm().
-		AddDropDown("Title", []string{"Mr.", "Ms.", "Mrs.", "Dr.", "Prof."}, 0, nil).
+		AddFormItem(createDropDown()).
+		//AddDropDown("Title", []string{"Mr.", "Ms.", "Mrs.", "Dr.", "Prof."}, 0, nil).
 		AddInputField("First name", "", 20, nil, nil).
 		AddInputField("Last name", "", 20, nil, nil).
 		AddDateField("Date", time.Now(), nil).
@@ -26,4 +41,15 @@ func main() {
 	if err := app.SetRoot(form, true).EnableMouse(true).EnablePaste(true).Run(); err != nil {
 		panic(err)
 	}
+}
+
+func createDropDown() tview.FormItem {
+	dropDown := tview.NewDropDown().
+		SetLabel("Title").
+		SetOptions([]string{"Mr.", "Ms.", "Mrs.", "Dr.", "Prof."}, nil).
+		SetCurrentOption(0).
+		SetAllowEntry(true)
+
+	return dropDown
+
 }
