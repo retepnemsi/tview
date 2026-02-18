@@ -60,8 +60,14 @@ func NewDateField() *DateField {
 			datefield.Box.focus()
 		}
 	})
+	datefield.textArea.SetChangedFunc(func() {
+		if datefield.changed != nil {
+			datefield.changed(datefield.textArea.GetText())
+		}
+	})
 	datefield.textArea.textStyle = tcell.StyleDefault.Background(Styles.ContrastBackgroundColor).Foreground(Styles.PrimaryTextColor)
 	datefield.textArea.placeholderStyle = tcell.StyleDefault.Background(Styles.ContrastBackgroundColor).Foreground(Styles.ContrastSecondaryTextColor)
+	datefield.Box.Primitive = datefield
 	return datefield
 }
 
@@ -256,8 +262,8 @@ func (df *DateField) Draw(screen tcell.Screen) {
 
 // InputHandler returns the handler for this primitive.
 func (df *DateField) InputHandler() func(event *tcell.EventKey, setFocus func(p Primitive)) {
-	return df.WrapInputHandler(func(key *tcell.EventKey, f func(p Primitive)) {
-		df.inputHandler(key, f)
+	return df.WrapInputHandler(func(event *tcell.EventKey, setFocus func(p Primitive)) {
+		df.inputHandler(event, setFocus)
 	})
 }
 
@@ -265,9 +271,6 @@ func (df *DateField) inputHandler(event *tcell.EventKey, setFocus func(p Primiti
 	if df.textArea.GetDisabled() {
 		return
 	}
-
-	// If we have an autocomplete list, there are certain keys we will
-	// forward to it.
 
 	// Finish up.
 	finish := func(key tcell.Key) {
