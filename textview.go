@@ -282,6 +282,12 @@ func (t *TextView) SetLabel(label string) *TextView {
 	return t
 }
 
+// SetLabelStyle sets the style of the label.
+func (t *TextView) SetLabelStyle(style tcell.Style) *TextView {
+	t.labelStyle = style
+	return t
+}
+
 // GetLabel returns the text to be displayed before the text view.
 func (t *TextView) GetLabel() string {
 	return t.label

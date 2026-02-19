@@ -21,10 +21,13 @@ Capitalize on low hanging fruit to identify a ballpark value added activity to b
 
 func main() {
 	app := tview.NewApplication()
+	labelStyle := tcell.StyleDefault.Foreground(tcell.ColorWhite).Background(tcell.ColorBlack).Italic(true)
 	textView := tview.NewTextView().
 		SetDynamicColors(true).
 		SetRegions(true).
 		SetWordWrap(true).
+		SetLabel("Corporate Speak ").
+		SetLabelStyle(labelStyle).
 		SetChangedFunc(func() {
 			app.Draw()
 		})
