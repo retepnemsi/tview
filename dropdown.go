@@ -33,8 +33,6 @@ type DropDown struct {
 	// currently selected.
 	currentOption int
 
-	// Allow entering a new value, not in the options.
-	allowEntry bool
 	// Strings to be placed before and after the current option.
 	currentOptionPrefix, currentOptionSuffix string
 
@@ -99,7 +97,7 @@ func NewDropDown() *DropDown {
 	list := NewList()
 	list.ShowSecondaryText(false).
 		SetMainTextStyle(tcell.StyleDefault.Background(Styles.MoreContrastBackgroundColor).Foreground(Styles.PrimitiveBackgroundColor)).
-		SetSelectedStyle(tcell.StyleDefault.Background(Styles.PrimaryTextColor).Foreground(Styles.InverseTextColor)).
+		SetSelectedStyle(tcell.StyleDefault.Background(Styles.PrimaryTextColor).Foreground(Styles.PrimitiveBackgroundColor)).
 		SetHighlightFullLine(true).
 		SetBackgroundColor(Styles.MoreContrastBackgroundColor)
 
@@ -111,7 +109,6 @@ func NewDropDown() *DropDown {
 		currentOption: -1,
 		list:          list,
 		prefix:        prefix,
-		allowEntry:    false,
 		labelStyle:    tcell.StyleDefault.Foreground(Styles.SecondaryTextColor),
 		fieldStyle:    tcell.StyleDefault.Background(Styles.ContrastBackgroundColor).Foreground(Styles.PrimaryTextColor),
 		focusedStyle:  tcell.StyleDefault.Background(Styles.PrimaryTextColor).Foreground(Styles.ContrastBackgroundColor),
@@ -179,18 +176,6 @@ func (d *DropDown) SetTextOptions(prefix, suffix, currentPrefix, currentSuffix, 
 func (d *DropDown) SetUseStyleTags(useStyleTags bool) *DropDown {
 	d.list.SetUseStyleTags(useStyleTags, useStyleTags)
 	return d
-}
-
-// SetAllowEntry sets the DropDown to accepting a new value,
-// essentially working as an InputField.
-func (d *DropDown) SetAllowEntry(allowEntry bool) *DropDown {
-	d.allowEntry = allowEntry
-	return d
-}
-
-// GetAllowEntry find out if the DropDown allows new entries.
-func (d *DropDown) GetAllowEntry() bool {
-	return d.allowEntry
 }
 
 // SetLabel sets the text to be displayed before the input area.
@@ -566,10 +551,6 @@ func (d *DropDown) InputHandler() func(event *tcell.EventKey, setFocus func(p Pr
 			}
 			d.prefix.SetText("")
 		case tcell.KeyEnter:
-			// If we allow new entries we are done selecting
-			if d.allowEntry {
-				d.doneSelecting(tcell.KeyTab, setFocus)
-			}
 			// If the list is closed, open it. Otherwise, forward the event to
 			// it.
 			if !d.open {
@@ -578,7 +559,14 @@ func (d *DropDown) InputHandler() func(event *tcell.EventKey, setFocus func(p Pr
 				handler(event, setFocus)
 			}
 		case tcell.KeyEscape, tcell.KeyTab, tcell.KeyBacktab:
-			d.doneSelecting(key, setFocus)
+			// Done selecting.
+			if d.done != nil {
+				d.done(key)
+			}
+			if d.finished != nil {
+				d.finished(key)
+			}
+			d.closeList(setFocus)
 		default:
 			// Pass other key events to the input field.
 			if handler := d.prefix.InputHandler(); handler != nil {
@@ -588,17 +576,6 @@ func (d *DropDown) InputHandler() func(event *tcell.EventKey, setFocus func(p Pr
 			d.openList(setFocus)
 		}
 	})
-}
-
-func (d *DropDown) doneSelecting(key tcell.Key, setFocus func(p Primitive)) {
-	// Done selecting.
-	if d.done != nil {
-		d.done(key)
-	}
-	if d.finished != nil {
-		d.finished(key)
-	}
-	d.closeList(setFocus)
 }
 
 // evalPrefix selects an item in the drop-down list based on the current prefix.
